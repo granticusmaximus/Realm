@@ -1,0 +1,101 @@
+@page "/edit-roles"
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject RoleManager<IdentityRole> RoleManager
+@attribute [Authoriz e(Roles = "Admin")]  
+<PageTitle>User Roles</PageTitle>
+<center>
+    <h3>Role Manager</h3>
+    <hr/>
+        <div class="row">
+            <div class="col-md-5">
+                <div class="mt-3">
+                    <div class="input-group">
+                        <input class="form-control" placeholder="Enter New Role Name Here" @bind="@newRoleName" />
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" @onclick="AddRole">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="mt-3">
+                    <a class="btn btn-primary" href="/assigned-roles"><i class="fa fa-square-plus"></i>View Users with Roles</a>
+                </div>
+            </div>
+        </div>
+    <hr/>
+</center>
+
+@if (roles != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var role in roles)
+            {
+                <tr>
+                    <td>@role.Name</td>
+                    <td>
+                        <a class="btn btn-primary" href="/usersbyrole/@role.Name"><i class="fa fa-users"></i> View Users</a>
+                        <a class="btn btn-primary" href="/assignroles"><i class="fa fa-square-plus"></i> Assign</a>
+                        <button class="btn btn-danger" @onclick="() => DeleteRole(role.Id)"><i class="fa fa-trash"></i> Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<IdentityRole> roles;
+    private string newRoleName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        roles = await RoleManager.Roles.ToListAsync();
+    }
+
+    private async Task AddRole()
+    {
+        if (!string.IsNullOrEmpty(newRoleName))
+        {
+            var role = new IdentityRole { Name = newRoleName };
+            var result = await RoleManager.CreateAsync(role);
+
+            if (result.Succeeded)
+            {
+                roles.Add(role);
+                newRoleName = string.Empty;
+            }
+            else
+            {
+                // Handle role creation failure
+            }
+        }
+    }
+
+    private async Task DeleteRole(string roleId)
+    {
+        var role = await RoleManager.FindByIdAsync(roleId);
+
+        if (role != null)
+        {
+            var result = await RoleManager.DeleteAsync(role);
+
+            if (result.Succeeded)
+            {
+                roles.Remove(role);
+            }
+            else
+            {
+                // Handle role deletion failure
+            }
+        }
+    }
+}

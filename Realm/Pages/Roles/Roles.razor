@@ -1,0 +1,67 @@
+@page "/assigned-roles"
+@using Realm.Data.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject UserManager<AppUser> UserManager
+@inject RoleManager<IdentityRole> RoleManager
+@attribute [Authorize(Roles = "Admin")]  
+<PageTitle>Assigned User Roles</PageTitle>
+<h3>User Roles</h3>
+
+@if (userRoles != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Roles</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var userRole in userRoles)
+            {
+                <tr>
+                    <td>@userRole.Username</td>
+                    <td>
+                        @if (userRole.Roles.Any())
+                        {
+                            @foreach (var role in userRole.Roles)
+                            {
+                                <span class="badge badge-primary">@role</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="badge badge-secondary">No roles assigned</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<UserRoleViewModel> userRoles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var users = await UserManager.Users.ToListAsync();
+
+        userRoles = new List<UserRoleViewModel>();
+
+        foreach (var user in users)
+        {
+            var roles = await UserManager.GetRolesAsync(user);
+            var username = user.UserName;
+
+            userRoles.Add(new UserRoleViewModel { Username = username, Roles = roles.ToList() });
+        }
+    }
+
+    public class UserRoleViewModel
+    {
+        public string Username { get; set; }
+        public List<string> Roles { get; set; }
+    }
+}

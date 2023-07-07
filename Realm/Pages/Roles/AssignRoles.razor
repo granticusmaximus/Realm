@@ -1,0 +1,83 @@
+@page "/assignroles"
+@using Realm.Data.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using System.ComponentModel.DataAnnotations;
+@inject RoleManager<IdentityRole> RoleManager
+@inject UserManager<AppUser> UserManager
+
+@attribute [Authorize(Roles = "Admin")]  
+<PageTitle>Assign User Roles</PageTitle>
+<h3>Assign Roles</h3>
+
+<EditForm Model="userRoleModel" OnValidSubmit="AssignRole">
+    <div class="form-group">
+        <label for="userId">User</label>
+        <select id="userId" class="form-control" @bind="@userRoleModel.UserId">
+            <option value="">-- Select User --</option>
+            @foreach (var user in users)
+            {
+                <option value="@user.Id">@user.UserName</option>
+            }
+        </select>
+        <ValidationMessage For="@(() => userRoleModel.UserId)" />
+    </div>
+
+    <div class="form-group">
+        <label for="role">Role</label>
+        <select id="role" class="form-control" @bind="@userRoleModel.RoleName">
+            <option value="">-- Select Role --</option>
+            @foreach (var role in roles)
+            {
+                <option value="@role.Name">@role.Name</option>
+            }
+        </select>
+        <ValidationMessage For="@(() => userRoleModel.RoleName)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Assign Role</button>
+</EditForm>
+
+<UserRolesComponent />
+
+@code {
+    private List<AppUser> users;
+    private List<IdentityRole> roles;
+    private UserRoleModel userRoleModel = new UserRoleModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await UserManager.Users.ToListAsync();
+        roles = await RoleManager.Roles.ToListAsync();
+    }
+
+    private async Task AssignRole()
+    {
+        var user = await UserManager.FindByIdAsync(userRoleModel.UserId);
+        var role = await RoleManager.FindByNameAsync(userRoleModel.RoleName);
+
+        if (user != null && role != null)
+        {
+            var result = await UserManager.AddToRoleAsync(user, role.Name);
+
+            if (result.Succeeded)
+            {
+                // Role assigned successfully
+                userRoleModel = new UserRoleModel();
+            }
+            else
+            {
+                // Handle role assignment failure
+            }
+        }
+    }
+
+    public class UserRoleModel
+    {
+        [Required(ErrorMessage = "Please select a user.")]
+        public string UserId { get; set; }
+
+        [Required(ErrorMessage = "Please select a role.")]
+        public string RoleName { get; set; }
+    }
+}
