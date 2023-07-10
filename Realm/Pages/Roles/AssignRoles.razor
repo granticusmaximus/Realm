@@ -6,10 +6,14 @@
 @inject RoleManager<IdentityRole> RoleManager
 @inject UserManager<AppUser> UserManager
 
-@attribute [Authorize(Roles = "Admin")]  
+@attribute [Authorize(Roles = "Admin")]
 <PageTitle>Assign User Roles</PageTitle>
 <h3>Assign Roles</h3>
-
+<br/>
+<div class="mt-3">
+    <a class="btn btn-primary" href="/edit-roles"><i class="fa fa-square-plus"></i>Back To List</a>
+</div>
+<br/>
 <EditForm Model="userRoleModel" OnValidSubmit="AssignRole">
     <div class="form-group">
         <label for="userId">User</label>

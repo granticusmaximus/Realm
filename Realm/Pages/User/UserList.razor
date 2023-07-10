@@ -1,0 +1,63 @@
+@page "/userlist"
+@using Realm.Data.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject UserManager<AppUser> UserManager
+@inject NavigationManager NavigationManager
+
+<h3>User List</h3>
+
+<a class="btn btn-primary" href="/newuser"><i class="fa fa-plus"></i> Create New User</a>
+
+@if (users != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>
+                        <button class="btn btn-danger" @onclick="() => DeleteUser(user.Id)"><i class="fa fa-trash"></i> Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<AppUser> users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await UserManager.Users.ToListAsync();
+    }
+
+    private async Task DeleteUser(string userId)
+    {
+        var user = await UserManager.FindByIdAsync(userId);
+
+        if (user != null)
+        {
+            var result = await UserManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+            {
+                users.Remove(user);
+            }
+            else
+            {
+                // Handle user deletion failure
+            }
+        }
+    }
+}

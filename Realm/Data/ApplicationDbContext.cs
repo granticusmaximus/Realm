@@ -11,5 +11,6 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
         Database.EnsureCreated();
     }
     public DbSet<Employee> Employees { get; set; }
+    public DbSet<Chat> Chats { get; set; }
 }
 

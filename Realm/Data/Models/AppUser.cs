@@ -10,6 +10,7 @@ namespace Realm.Data.Models
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
+        public List<Chat> Chats { get; set; }
         public string FullName
         {
             get { return FirstName + " " +LastName ;}

@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore
 @inject RoleManager<IdentityRole> RoleManager
-@attribute [Authoriz e(Roles = "Admin")]  
+@attribute [Authorize(Roles = "Admin")]
 <PageTitle>User Roles</PageTitle>
 <center>
     <h3>Role Manager</h3>
@@ -42,8 +42,7 @@
                 <tr>
                     <td>@role.Name</td>
                     <td>
-                        <a class="btn btn-primary" href="/usersbyrole/@role.Name"><i class="fa fa-users"></i> View Users</a>
-                        <a class="btn btn-primary" href="/assignroles"><i class="fa fa-square-plus"></i> Assign</a>
+                        <a class="btn btn-primary" href="/assignroles"><i class="fa fa-users"></i> Assign</a>
                         <button class="btn btn-danger" @onclick="() => DeleteRole(role.Id)"><i class="fa fa-trash"></i> Delete</button>
                     </td>
                 </tr>
