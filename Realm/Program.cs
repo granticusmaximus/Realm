@@ -24,9 +24,9 @@ builder.Services.AddDefaultIdentity<AppUser>()
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<AppUser>>();
+
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -55,4 +55,5 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
+
 

@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore
 @inject UserManager<AppUser> UserManager
+@inject SignInManager<AppUser> SignInManager
 @inject NavigationManager NavigationManager
 
 <h3>User List</h3>
@@ -26,7 +27,8 @@
                     <td>@user.UserName</td>
                     <td>@user.Email</td>
                     <td>
-                        <button class="btn btn-danger" @onclick="() => DeleteUser(user.Id)"><i class="fa fa-trash"></i> Delete</button>
+                        <a class="btn btn-primary" href="/Identity/Account/Manage"><i class="fa fa-pencil"></i></a>
+                        <button class="btn btn-danger" @onclick="() => DeleteUser(user.Id)"><i class="fa fa-trash"></i></button>
                     </td>
                 </tr>
             }

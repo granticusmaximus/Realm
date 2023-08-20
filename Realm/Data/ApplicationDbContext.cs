@@ -12,5 +12,7 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
     }
     public DbSet<Employee> Employees { get; set; }
     public DbSet<Chat> Chats { get; set; }
+
+
 }
 

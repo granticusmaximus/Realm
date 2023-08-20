@@ -2,7 +2,8 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore
 @inject RoleManager<IdentityRole> RoleManager
-@attribute [Authorize(Roles = "Admin")]
+
+
 <PageTitle>User Roles</PageTitle>
 <center>
     <h3>Role Manager</h3>
@@ -39,7 +40,7 @@
         <tbody>
             @foreach (var role in roles)
             {
-                <tr>
+                <tr style="width:50%">
                     <td>@role.Name</td>
                     <td>
                         <a class="btn btn-primary" href="/assignroles"><i class="fa fa-users"></i> Assign</a>
