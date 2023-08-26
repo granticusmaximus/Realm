@@ -2,9 +2,11 @@
 @using Realm.Data.Models
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.Authorization
 @inject UserManager<AppUser> UserManager
 @inject SignInManager<AppUser> SignInManager
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <h3>User List</h3>
 
@@ -27,7 +29,10 @@
                     <td>@user.UserName</td>
                     <td>@user.Email</td>
                     <td>
-                        <a class="btn btn-primary" href="/Identity/Account/Manage"><i class="fa fa-pencil"></i></a>
+                        @if (IsCurrentUser(user.Id))
+                        {
+                            <a class="btn btn-primary" href="/Identity/Account/Manage"><i class="fa fa-pencil"></i></a>
+                        }
                         <button class="btn btn-danger" @onclick="() => DeleteUser(user.Id)"><i class="fa fa-trash"></i></button>
                     </td>
                 </tr>
@@ -61,5 +66,12 @@
                 // Handle user deletion failure
             }
         }
+    }
+
+    private bool IsCurrentUser(string userId)
+    {
+        var authStateTask = AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var authState = authStateTask.GetAwaiter().GetResult();
+        return authState.User.Identity.Name == userId;
     }
 }
