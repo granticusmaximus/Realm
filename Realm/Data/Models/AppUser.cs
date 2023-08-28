@@ -11,9 +11,10 @@ namespace Realm.Data.Models
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public List<Chat> Chats { get; set; }
+        public byte[]? ProfilePicture { get; set; } // This line is added
         public string FullName
         {
-            get { return FirstName + " " +LastName ;}
+            get { return FirstName + " " + LastName; }
         }
     }
 }

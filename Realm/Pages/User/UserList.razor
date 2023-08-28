@@ -9,15 +9,17 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <h3>User List</h3>
-
+<p>Current User ID: @currentUserId</p>
+<hr/>
 <a class="btn btn-primary" href="/newuser"><i class="fa fa-plus"></i> Create New User</a>
-
+<hr/>
 @if (users != null)
 {
     <table class="table">
         <thead>
             <tr>
                 <th>Username</th>
+                <th>ID</th>
                 <th>Email</th>
                 <th>Actions</th>
             </tr>
@@ -27,6 +29,7 @@
             {
                 <tr>
                     <td>@user.UserName</td>
+                    <td>@user.Id</td>
                     <td>@user.Email</td>
                     <td>
                         @if (IsCurrentUser(user.Id))
@@ -43,10 +46,11 @@
 
 @code {
     private List<AppUser> users;
-
+    private string currentUserId;
     protected override async Task OnInitializedAsync()
     {
         users = await UserManager.Users.ToListAsync();
+        currentUserId = GetCurrentUserId();
     }
 
     private async Task DeleteUser(string userId)
@@ -68,10 +72,22 @@
         }
     }
 
-    private bool IsCurrentUser(string userId)
+
+    private string GetCurrentUserId()
     {
         var authStateTask = AuthenticationStateProvider.GetAuthenticationStateAsync();
         var authState = authStateTask.GetAwaiter().GetResult();
-        return authState.User.Identity.Name == userId;
+        
+        var userIdClaim = authState.User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+        if(userIdClaim != null)
+        {
+            return userIdClaim.Value;
+        }
+        return null; 
+    }
+
+    private bool IsCurrentUser(string userId)
+    {
+        return userId == currentUserId;
     }
 }

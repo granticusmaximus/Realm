@@ -1,6 +1,29 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 @import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
 
+
+.top-row {
+    background-color: #07173c !important;
+}
+
+.loginA {
+    color: white !important;
+}
+
+.bg-white {
+    --bs-bg-opacity: 1;
+    background-color: #07173c !important;
+}
+
+.navbar-light .navbar-brand {
+    color: white !important;
+}
+
+.sidebar {
+    background-image: none !important;
+    background-color: #07173c !important;
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }

@@ -1,4 +1,11 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using Realm.Data.Models
+@inject UserManager<AppUser> UserManager
+
+@{
+    AppUser currentUser = await UserManager.GetUserAsync(User);
+    string userFirstName = currentUser?.FirstName ?? "User";
+
     if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
     {
         Layout = parentLayout.ToString();
@@ -9,7 +16,7 @@
     }
 }
 
-<h1>Manage your account settings</h1>
+<h1>Manage @userFirstName's account settings</h1>
 
 <div>
     <hr />
